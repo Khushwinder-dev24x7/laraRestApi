@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,7 @@ Route::get('/test',function(){
 Route::put('/user/{id}',function($id){
     return response("put". $id, 200);
 });
+
+Route::post('user/save',[UserController::class,'store'])->name('save-user');
+
+
