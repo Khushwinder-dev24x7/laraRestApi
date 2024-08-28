@@ -35,5 +35,8 @@ Route::put('/user/{id}',function($id){
 });
 
 Route::post('user/save',[UserController::class,'store'])->name('save-user');
+Route::get('user/get/{flag}',[UserController::class,'index'])->name('get-user');
+Route::get('user/{id}',[UserController::class,'show'])->name('show-user');
+Route::delete('user/{id}',[UserController::class,'destroy'])->name('delete-user');
 
 

@@ -16,9 +16,50 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($abc)
     {
-        //
+        //f
+        // $user = User::all();
+        $query = User::select("email","name");
+
+        if($abc == 1){
+            $query->where("status",1);
+        }
+        elseif($abc == 0)
+        {
+
+        }
+        else{
+             return response()->json([
+                "message" => "invalid Paramenter",
+                "status" => 0,
+             ],400);
+        }
+
+
+
+        // $user = User::select("email", "name")->where("status",1)->get();
+        $user = $query->get();
+        if (count($user) > 0){
+            // user exists
+            // p($user);
+
+            $response =[
+                "message" => count($user). "User Found",
+                "status" => 1,
+                "data" => $user
+            ];
+        }
+        else
+        {
+            $response =[
+                "message" => count($user). "User Found",
+                "status" => 0
+            ];
+        }
+        // return response()->json($response,200);
+        return response()->json($response,200);
+
     }
 
     /**
@@ -96,6 +137,21 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user= User::find($id);
+        if(is_null($user)){
+           $response =[
+            "message" => "User Not Found",
+            "status" => 0,
+           ];
+        }
+        else{
+             $response =[
+                "message" => "user found",
+                "status" => 1,
+                "data" => $user
+             ];
+        }
+         return response()->json($response,200);
     }
 
     /**
@@ -130,5 +186,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::find($id);
+        if(is_null($user)){
+            $response = [
+                "message" => "User Not Found",
+                "status" => 0
+            ];
+        }
     }
 }

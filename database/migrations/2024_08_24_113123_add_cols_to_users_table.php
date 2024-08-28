@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string("contact")->nullable();
-            $table->text("address")->nullable;
-            $table->text("pincode",6);
-            $table->boolean("status")->comment("1:Active, 0:Inactive")->default(1);
+            // $table->string("contact")->nullable();
+            // $table->text("address")->nullable();
+            // $table->text("pincode",6);
+            // $table->boolean("status")->comment("1:Active, 0:Inactive")->default(1);
         });
     }
 
