@@ -38,5 +38,7 @@ Route::post('user/save',[UserController::class,'store'])->name('save-user');
 Route::get('user/get/{flag}',[UserController::class,'index'])->name('get-user');
 Route::get('user/{id}',[UserController::class,'show'])->name('show-user');
 Route::delete('user/{id}',[UserController::class,'destroy'])->name('delete-user');
+Route::put('user/update/{id}',[UserController::class,'update'])->name("update-user");
+Route::patch('pass-change/{id}',[UserController::class,'passChange'])->name('pass-change');
 
 

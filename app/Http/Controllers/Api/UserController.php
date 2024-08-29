@@ -95,7 +95,8 @@ class UserController extends Controller
             $data=[
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
+                // 'password' => Hash::make($request->password)
+                'password' => $request->password
             ];
             // p($data);
             DB::beginTransaction();
@@ -175,6 +176,42 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = User::find($id);
+        // p($request->all());
+        // die;
+        if(is_null($user)){
+             return response()->json([
+                "meassaage" => "User Not Found",
+                "status" => 0
+             ],404);
+        }
+        else
+        {
+            DB::beginTransaction();
+            try{
+            $user->name = $request['name'];
+            $user->email = $request['email'];
+            $user->save();
+            DB::commit();
+            }
+            catch(\Exception $e){
+               DB::rollBack();
+               $user = null;
+            }
+            if(is_null($user)){
+                return response()->json([
+                    "message" => "Internal server Error",
+                    "status" => 0,
+                    "error-msg" => $e->getMessage()
+                ],500);
+            }
+            else{
+                return response()->json([
+                    "message" => "User Updated",
+                    "status" => 1
+                ],200);
+            }
+        }
     }
 
     /**
@@ -192,6 +229,76 @@ class UserController extends Controller
                 "message" => "User Not Found",
                 "status" => 0
             ];
+            $resCode = 404;
+        }
+        else{
+            DB::beginTransaction();
+
+            try{
+                $user->delete();
+                DB::commit();
+                $response =[
+                    "message" => "User Deleted",
+                    "status" => 1
+                ];
+                $resCode =200;
+            }
+            catch(\Exception $e){
+                DB::rollBack();
+                $response = [
+                    "message" => "Error",
+                    "status" =>0
+                ];
+                $resCode =500;
+            }
+        }
+        return response()->json($response,$resCode);
+    }
+
+    public function passChange(Request $request, $id)
+    {
+
+        dd($id);
+        die;
+
+        $user = User::find($id);
+        if(is_null($user)){
+            return response()->json([
+                "message" => "User Not found",
+                "status" => 0
+            ],500);
+        }
+        else
+        {
+          if($user->password == $request['old_pass']){
+             DB::beginTransaction();
+             try{
+                  $user->password = $request['password'];
+                  $user->save();
+                  DB::commit();
+             }
+             catch(\Exception $e){
+                    $user = null;
+                    DB::rollBack();
+
+             }
+
+             if(is_null($user)){
+                return response()->json(
+                    [
+                      "meassage" =>  "Internal server Error",
+                      "status" => 0,
+                      "erMsg" => $e->getMessage()
+                    ],500
+                );
+             }
+             else{
+                return response()->json([
+                    "message" => "Pass Updated",
+                    "status" => 1
+                ],200);
+             }
+          }
         }
     }
 }
